@@ -1,7 +1,9 @@
-from ALLOWED_TAGS import *
+from .ALLOWED_TAGS import *
 from string import Template
 import json
 import os
+import importlib.resources
+from importlib.resources import files
 
 
 class Identifier:
@@ -74,21 +76,20 @@ class Identifier:
     def identify(self):
         if len(self.ALLOWED_TAGS) == 0:
             self.check_allowed_tags()
-        arr = json.load(open("./generated_payloads.json"))
+        with importlib.resources.open_text('hui', 'generated_payloads.json') as f:
+            arr = json.load(f)
         res = [self.call_handler(tag) for tag in arr]
-
-        # Load all JSON files from ./results_parsers
-        json_files = [f for f in os.listdir('./results_parsers') if f.endswith('.json')]
+        json_files = [f for f in importlib.resources.files('hui.results_parsers').iterdir() if f.name.endswith('.json')]
 
         result = []
 
         for json_file in json_files:
-            with open(os.path.join('./results_parsers', json_file), 'r') as f:
+            with open(json_file) as f:
                 data = json.load(f)
 
             # Count the number of matches in the JSON file
             matches = sum([1 for i in range(len(res)) if res[i].strip() == Template(data[i]).substitute(self.TEMPLATE_VARS).strip()])
-            result.append([matches/len(data),matches,json_file.split('.')[0]])
+            result.append([matches/len(data),matches,json_file.name.split('.')[0]])
 
         result = sorted(result,reverse=True)
         return result      

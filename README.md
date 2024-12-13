@@ -14,3 +14,8 @@ a = Identifier(handler=handler)
 print(a.identify())
 print(a.ALLOWED_TAGS)
 ```
+
+# Install 
+```
+pip install hui
+```

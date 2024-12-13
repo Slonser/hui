@@ -1,4 +1,4 @@
-from ParserPayload import ParserPayload
+from .ParserPayload import ParserPayload
 import json
 import os
 

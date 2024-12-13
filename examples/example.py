@@ -1,4 +1,4 @@
-from identify import Identifier
+from hui.identify import Identifier
 import requests
 
 def handler(payload):
@@ -7,4 +7,3 @@ def handler(payload):
 a = Identifier(handler=handler)
 print(a.identify())
 print(a.ALLOWED_TAGS)
-
