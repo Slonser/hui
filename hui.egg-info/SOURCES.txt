@@ -3,7 +3,9 @@ README.md
 pyproject.toml
 setup.cfg
 setup.py
+hui/ALLOWED_ATTRS.py
 hui/ALLOWED_TAGS.py
+hui/CustomParser.py
 hui/Generator.py
 hui/ParserBase.py
 hui/ParserPayload.py

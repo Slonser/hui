@@ -2,6 +2,14 @@
 
 Html Universal Identifier is an alpha version of an application designed for identifying server-side HTML parsers. This package provides a way to determine which HTML, SVG, and MathML tags are allowed, helps to find parser features (incorrectly implemented tags), and can also help to guess which parser is used on the backend.
 
+Primarily, this library relies on the incorrectness of HTML parsing, for example, here are some classic examples:
+- `<form><form>text</form></form>` should be transformed to `<form>text</form>`
+- `<h1><h2>text</h2></h1>` should be transformed to `<h1><h2>text</h2></h1>`
+
+There are several reasons why you don't want to rely entirely on allowed tags:
+- It won't help you determine which parser your custom sanitization is based on
+- Allowed tags can be changed
+  
 ## Features
 
 - Identify allowed HTML, SVG, and MathML tags.
@@ -74,14 +82,31 @@ If you believe a new parser/sanitizer should be added, please create an issue, a
 
 ### Methods
 
-- **`check_allowed_tags()`**: Checks and populates the `ALLOWED_TAGS` dictionary with allowed tags.
-- **`call_handler(template_payloads: list[str])`**: Calls the handler function with a list of template payloads.
+- **`check_allowed_tags()`**: Checks and populates the `ALLOWED_TAGS` dictionary with allowed tags for HTML, SVG, and MathML.
+- **`call_handler(template_payloads: list[str])`**: Calls the handler function with a list of template payloads and returns the processed results.
 - **`check_namespace(namespace: str)`**: Checks for allowed tags in the specified namespace (SVG or MathML).
 - **`identify()`**: Identifies the best matching Parser based on generated payloads and returns a list of matches.
+- **`check_allowed_attrs()`**: Checks and validates allowed attributes for HTML tags.
 
 ### identify() Method
 
 The `identify()` method checks if allowed tags have been determined. If not, it calls `check_allowed_tags()` to populate the `ALLOWED_TAGS`. It then loads a list of generated payloads from a JSON file and calls the handler for each payload. Finally, it compares the results against all JSON files in the `results_parsers` directory to count matches and returns a sorted list of results.
+
+### Attributes
+
+- **`ATTRIBUTES`**: A dictionary that holds information about allowed attributes for HTML tags, including:
+  - `custom_attribute`: Indicates if custom attributes are allowed.
+  - `event_attributes_blocked`: Indicates if event attributes are directly blocked.
+  - `data_attributes`: Indicates if data attributes are allowed.
+  - `attrs_allowed`: A nested dictionary categorizing allowed attributes into global, event and specific tags attributes.
+
+### Allowed Tags
+
+- **`ALLOWED_TAGS`**: A dictionary that holds information about allowed tags for HTML, SVG, and MathML, including:
+  - `html`: A list of allowed HTML tags.
+  - `svg`: A list of allowed SVG tags.
+  - `math`: A list of allowed MathML tags.
+
 
 - **Returns**: A list of tuples, each containing:
   - The match ratio (float)

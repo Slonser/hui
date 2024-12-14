@@ -1,4 +1,5 @@
 from .ALLOWED_TAGS import *
+from .ALLOWED_ATTRS import *
 from string import Template
 import json
 import os
@@ -6,7 +7,7 @@ import importlib.resources
 from importlib.resources import files
 from .parsers.simple_parser import SANITIZE_HTML
 import logging
-
+from .CustomParser import CustomParser
 
 class Identifier:
     def __init__(self, handler, buffer_enabled=False, buffer_delimeter="<div>TEXTTEXT</div>", buffer_limit=32, template_vars=None, debug_mode=False) -> None:
@@ -43,6 +44,17 @@ class Identifier:
         self.BUFFER_DELIMETER = buffer_delimeter
         self.INCORRECT_PARSED = []
 
+
+        self.ATTRIBUTES = {
+            "custom_attribute" : None, # is custom attributes allowed
+            "event_attributes_blocked": None, # is event attributes directly blocked
+            "data_attributes": None, # is data attributes allowed
+            "attrs_allowed":{
+                "global":[], # global attributes
+                "events":[] # events attributes
+            }
+        }
+
         # Configure logging based on debug_mode
         if debug_mode:
             logging.basicConfig(level=logging.DEBUG)
@@ -50,6 +62,7 @@ class Identifier:
             logging.basicConfig(level=logging.INFO)
 
         self.logger = logging.getLogger(__name__)
+        self.parser = CustomParser()
 
     def check_allowed_tags(self) -> dict:
         """
@@ -165,7 +178,7 @@ class Identifier:
         self.logger.debug("Identifying tags...")
         if len(self.ALLOWED_TAGS['html']) == 0:
             self.check_allowed_tags()
-
+        self.check_allowed_attrs()
         arr = self.DEFAULT_SANITIZER.checks
         res = self.call_handler([tag.payload for tag in arr])
         for i in range(len(res)):
@@ -202,5 +215,69 @@ class Identifier:
             self.check_allowed_tags()
         if namespace not in self.ALLOWED_TAGS:
             raise Exception('Invalid namespace name')
-        return len(self.ALLOWED_TAGS) > 0
+        return len(self.ALLOWED_TAGS[namespace]) > 0
     
+    def check_attr_allowed(self, attr: str, tag: str = None, attr_value: str = "https://github.com/Slonser/hui") -> bool:
+        """
+        Checks if a given attribute is allowed for a specified tag.
+
+        This method checks if a given attribute is allowed for a specified tag by simulating the parsing of HTML elements with the attribute and then checking if the attribute is present in the parsed attributes.
+
+        :param attr: The attribute to check.
+        :param tag: The tag to check the attribute for. Defaults to None, which means the first allowed HTML tag will be used.
+        :param attr_value: The value to assign to the attribute for testing. Defaults to "https://github.com/Slonser/hui".
+        :return: True if the attribute is allowed, False otherwise.
+        """
+        if tag is None:
+            assert self.check_namespace_supported("html"), "No tags allowed"
+            tag = self.ALLOWED_TAGS['html'][0]
+        
+        # Simulate parsing of HTML elements with the attribute to check
+        res = self.call_handler([f'<{tag} {attr}="{attr_value}"></{tag}>',
+                                 f'<{tag}/{attr}="{attr_value}"></{tag}>']) # In some situations, the attribute might only be parsed with a / symbol
+        self.parser.check(res[0]+res[1])
+        # Check if the attribute is present in the parsed attributes
+        return attr in [attr_parsed[0] for attr_parsed in self.parser.found_attrs]
+    
+    def check_allowed_attrs(self):
+        """
+        Check and validate allowed attributes for HTML tags.
+
+        This method checks if global attributes, event attributes, and default attributes are allowed.
+        It updates the ATTRIBUTES dictionary with the allowed attributes and logs the results.
+
+        :return: A dictionary containing the allowed attributes categorized by global, event, and specific tags.
+        """
+        for attr in GLOBAL_ATTRS:
+            is_allowed = self.check_attr_allowed(attr)
+            if is_allowed:
+                self.ATTRIBUTES["attrs_allowed"]["global"].append(attr)
+        
+
+        for attr in EVENT_ATTRS:
+            is_allowed = self.check_attr_allowed(attr)
+            if is_allowed:
+                self.ATTRIBUTES["events"]["events"].append(attr)
+
+        for tag in DEFAULT_ATTRS:
+            self.ATTRIBUTES["attrs_allowed"][tag] = []
+            for attr in DEFAULT_ATTRS[tag]:
+                is_allowed = self.check_attr_allowed(attr,tag=tag)
+                if is_allowed:
+                    self.ATTRIBUTES["attrs_allowed"][tag].append(attr)
+ 
+        self.ATTRIBUTES["data_attributes"] = self.check_attr_allowed("data-hui")
+        if self.ATTRIBUTES["data_attributes"]:
+            self.logger.debug("data attributes allowed")
+        
+        self.ATTRIBUTES["custom_attribute"] = self.check_attr_allowed("custom")
+
+        if self.ATTRIBUTES["custom_attribute"]:
+            self.logger.debug("Custom attributes allowed")
+        
+        self.ATTRIBUTES["event_attributes_blocked"] = not(self.check_attr_allowed("onhui"))
+        
+        if self.ATTRIBUTES["custom_attribute"] and self.ATTRIBUTES["event_attributes_blocked"]:
+            self.logger.debug("Event attributes directly blocked")
+        
+        return self.ATTRIBUTES
