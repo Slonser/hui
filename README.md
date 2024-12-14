@@ -64,7 +64,7 @@ If you believe a new parser/sanitizer should be added, please create an issue, a
 
 - **`buffer_enabled`** (optional, default=False): A boolean flag to enable or disable buffering of payloads before sending them to the handler. By default, buffering is disabled, as it can sometimes lead to incorrect results. For example, some sanitizers may simply remove all input if it contains a dangerous tag. Use buffering only if the server you are interacting with has strict rate limits.
 
-- **`buffer_delimeter`** (optional, default="<div>TEXTTEXT</div>"): A string used to delimit buffered payloads when sending them to the handler.
+- **`buffer_delimeter`** (optional, default=`<div>TEXTTEXT</div>`): A string used to delimit buffered payloads when sending them to the handler.
 
 - **`buffer_limit`** (optional, default=32): An integer that specifies the maximum number of payloads to buffer before sending them to the handler.
 
