@@ -40,6 +40,9 @@ def handler(payload):
 a = Identifier(handler=handler, buffer_enabled=False, buffer_limit=64, debug_mode=False)
 print(a.identify())
 # run all
+# Example output 
+# [[1.0, 27, 'JS_SANITIZE_HTML'], [0.8148148148148148, 22, 'PYTHON_HTML_SANITIZE'], ...
+
 print(a.check_attr_allowed("href",tag="a"))
 # True or False
 print(a.INCORRECT_PARSED)
