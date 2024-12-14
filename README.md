@@ -13,9 +13,10 @@ There are several reasons why you don't want to rely entirely on allowed tags:
 ## Features
 
 - Identify allowed HTML, SVG, and MathML tags.
+- Identify allowed attributes.
+- Identify incorrect parsing
 - Use a customizable handler function to process HTML payloads.
 - Load and compare results against predefined Parser outputs.
-- The class also maintains an `INCORRECT_PARSED` list, which contains payloads that were incorrectly parsed by the handler. For example, this may include cases where the parser fails to remove nested forms and similar issues.
 
 ## Installation
 
@@ -92,6 +93,11 @@ If you believe a new parser/sanitizer should be added, please create an issue, a
 
 The `identify()` method checks if allowed tags have been determined. If not, it calls `check_allowed_tags()` to populate the `ALLOWED_TAGS`. It then loads a list of generated payloads from a JSON file and calls the handler for each payload. Finally, it compares the results against all JSON files in the `results_parsers` directory to count matches and returns a sorted list of results.
 
+- **Returns**: A list of tuples, each containing:
+  - The match ratio (float)
+  - The number of matches (int)
+  - The name of the Parser (str)
+
 ### Attributes
 
 - **`ATTRIBUTES`**: A dictionary that holds information about allowed attributes for HTML tags, including:
@@ -107,8 +113,14 @@ The `identify()` method checks if allowed tags have been determined. If not, it 
   - `svg`: A list of allowed SVG tags.
   - `math`: A list of allowed MathML tags.
 
+### Incorrectly Parsed Tags
 
-- **Returns**: A list of tuples, each containing:
-  - The match ratio (float)
-  - The number of matches (int)
-  - The name of the Parser (str)
+- **`INCORRECT_PARSED`**: A dictionary that holds information about incorrectly parsed tags for HTML, SVG, and MathML, including:
+  - `html`: A list of incorrectly parsed HTML tags.
+  - `svg`: A list of incorrectly parsed SVG tags.
+  - `math`: A list of incorrectly parsed MathML tags.
+
+### DEPTH_LIMITS
+**DEPTH_LIMITS**: A tuple that holds information about the depth limits of HTML tags, including:
+  - `max_depth`: The maximum depth of HTML tags.
+  - `limit_strategy`: The strategy used to handle tags exceeding the depth limit, which can be 'No max tags limit', 'Flattening', or 'Removing'.

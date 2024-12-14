@@ -38,12 +38,15 @@ class Identifier:
 
         self.ALLOWED_TAGS_CHECKED = False
         self.DEFAULT_SANITIZER = SANITIZE_HTML()
+
         self.BUFFER = ""
         self.BUFFER_LIMIT = buffer_limit
         self.BUFFER_ENABLED = buffer_enabled
         self.BUFFER_DELIMETER = buffer_delimeter
+        
         self.INCORRECT_PARSED = []
-
+        
+        self.DEPTH_LIMITS = ()
 
         self.ATTRIBUTES = {
             "custom_attribute" : None, # is custom attributes allowed
@@ -179,6 +182,7 @@ class Identifier:
         if len(self.ALLOWED_TAGS['html']) == 0:
             self.check_allowed_tags()
         self.check_allowed_attrs()
+        self.check_depth()
         arr = self.DEFAULT_SANITIZER.checks
         res = self.call_handler([tag.payload for tag in arr])
         for i in range(len(res)):
@@ -281,3 +285,23 @@ class Identifier:
             self.logger.debug("Event attributes directly blocked")
         
         return self.ATTRIBUTES
+    
+    def check_depth(self):
+        """
+        Check and validate the depth of HTML tags.
+
+        This method checks if the depth of HTML tags exceeds the limit and updates the DEPTH_LIMITS accordingly.
+
+        :return: DEPTH_LIMITS
+        """
+        assert self.check_namespace_supported("html"), "No tags allowed"
+        tag = self.ALLOWED_TAGS['html'][0]
+        res = self.call_handler([f'<div>'*514+f'</div>'])
+        self.parser.check(res[0])
+        if self.parser.max_depth > 512:
+            self.DEPTH_LIMITS = (self.parser.max_depth, 'No max tags limit')
+        elif self.parser.start_tags > 512:
+            self.DEPTH_LIMITS = (self.parser.max_depth, 'Flattening')
+        else:
+            self.DEPTH_LIMITS = (self.parser.max_depth, 'Removing')
+        return self.DEPTH_LIMITS
