@@ -1,6 +1,6 @@
 # Html Universal Identifier
 
-Html Universal Identifier is an alpha version of an application designed for identifying server-side HTML parsers. This package provides a way to determine which HTML, SVG, and MathML tags are allowed based on a handler function that request HTML.
+Html Universal Identifier is an alpha version of an application designed for identifying server-side HTML parsers. This package provides a way to determine which HTML, SVG, and MathML tags are allowed, helps to find parser features (incorrectly implemented tags), and can also help to guess which parser is used on the backend.
 
 ## Features
 
