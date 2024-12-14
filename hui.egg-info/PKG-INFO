@@ -1,3 +1,20 @@
+Metadata-Version: 2.1
+Name: hui
+Version: 0.1.2
+Home-page: https://github.com/slonser/hui
+Download-URL: https://github.com/Slonser/hui/archive/v_01.tar.gz
+Author: Slonser
+Author-email: slonser@slonser.info
+License: MIT
+Keywords: HTML,hui,HTML GUESSER,HTML identifier
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
 # Html Universal Identifier
 
 Html Universal Identifier is an alpha version of an application designed for identifying server-side HTML parsers. This package provides a way to determine which HTML, SVG, and MathML tags are allowed based on a handler function that request HTML.

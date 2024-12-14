@@ -1,5 +1,5 @@
-from ParserBase import ParserBase
-from ParserPayload import ParserPayload
+from ..ParserBase import ParserBase
+from ..ParserPayload import ParserPayload
 import os
 
 class SANITIZE_HTML(ParserBase):

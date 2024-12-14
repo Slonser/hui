@@ -15,5 +15,5 @@ class ParserPayload:
         return False
 
     
-    def remove_whitespace(self, string):
+    def remove_whitespace(string):
         return "".join(string.split())

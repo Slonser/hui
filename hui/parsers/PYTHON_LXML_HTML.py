@@ -1,4 +1,4 @@
-from ParserBase import ParserBase
+from ..ParserBase import ParserBase
 import os
 
 # Python LXML_HTML parser

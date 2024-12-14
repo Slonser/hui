@@ -1,5 +1,4 @@
-from ParserBase import ParserBase
-from ParserPayload import ParserPayload
+from ..ParserBase import ParserBase
 import os
 
 class SANITIZE_HTML(ParserBase):
@@ -9,4 +8,4 @@ class SANITIZE_HTML(ParserBase):
 
     def get_results(self):
         self.generate_payloads()
-        os.system("")
+        os.system("java -jar ./parsers/generators/JSOUP/target/java-jsoup-1.0-SNAPSHOT.jar")

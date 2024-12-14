@@ -1,10 +1,10 @@
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
   name = 'hui',
-  packages = ['hui'],     
-  version = '0.1.1',
+  packages= find_packages(),
+  version = '0.1.2',
   license='MIT', 
   author = 'Slonser',
   author_email = 'slonser@slonser.info',

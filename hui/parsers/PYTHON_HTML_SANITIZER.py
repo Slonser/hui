@@ -1,4 +1,4 @@
-from ParserBase import ParserBase
+from ..ParserBase import ParserBase
 import os
 # Python HTML parser
 class SANITIZE_HTML(ParserBase):
