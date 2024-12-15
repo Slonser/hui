@@ -73,6 +73,7 @@ The following parsers are currently supported in the project:
 - **JSDOM (JS)**
 - **sanitize_html (JS)**
 - **htmlparser2 (JS)**
+- **JSXSS (JS)**
 - **html (python)**
 - **lxml (python)**
 - **html_sanitizer (python)**

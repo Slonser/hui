@@ -4,13 +4,13 @@ from setuptools import setup, find_packages
 setup(
   name = 'hui',
   packages= find_packages(),
-  version = '0.2.1',
+  version = '0.2.2',
   license='MIT', 
   author = 'Slonser',
   author_email = 'slonser@slonser.info',
   url = 'https://github.com/slonser/hui',
   download_url = 'https://github.com/Slonser/hui/archive/v_01.tar.gz',
-  keywords = ['HTML', 'hui', 'HTML GUESSER', "HTML identifier"],
+  keywords = ['HTML', 'hui', 'HTML GUESSER', "HTML identifier", "XSS", "bugbounty"],
   classifiers=[
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',

@@ -96,6 +96,21 @@ class ParserBase:
                               expected_output=f'<{tag}>$text')
             )
 
+        # Some parsers incorrect handle <tag></tag></tag>
+        # TODO: should check with another tags, because h1 maybe banned
+        self.add(
+            ParserPayload(f'<h1>$text</h1></h1>',
+                            ['h1'],
+                            expected_output=f'<h1>123</h1></h1>')
+        )
+
+        #Some sanitizers not close tags
+        self.add(
+            ParserPayload(f'<h1>',
+                            ['h1'],
+                            expected_output=f'<h1></h1>')
+        )
+
     def add(self, payload):
         """
         Adds a ParserPayload to the checks list.

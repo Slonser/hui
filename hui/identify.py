@@ -187,7 +187,7 @@ class Identifier:
         res = self.call_handler([tag.payload for tag in arr])
         for i in range(len(res)):
             all_tags_allowed = all([self.check_tag_allowed(tag) for tag in arr[i].tags])
-            if  all_tags_allowed and  not(arr[i].check(Template(res[i]).safe_substitute(self.TEMPLATE_VARS))):
+            if  all_tags_allowed and  not(arr[i].check(res[i],self.TEMPLATE_VARS)):
                 self.logger.debug("Found incorrect parsing logic: %s, but %s is expected", res[i], arr[i].expected_output)
                 self.INCORRECT_PARSED.append({"output": res[i].strip(), "expected": arr[i].expected_output})
                 

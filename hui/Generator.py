@@ -1,4 +1,4 @@
-from .parsers import JS_DOM, JS_DOMPURIFY, JS_HTMLPARSER2, PYTHON_HTML, PYTHON_LXML_HTML,PYTHON_HTML_SANITIZER ,GO_HTML, JS_SANITIZE_HTML, GO_bluemonday
+from .parsers import JS_DOM, JS_DOMPURIFY, JS_HTMLPARSER2, PYTHON_HTML, PYTHON_LXML_HTML,PYTHON_HTML_SANITIZER ,GO_HTML, JS_SANITIZE_HTML, GO_bluemonday, JS_JSXSS
 
 def generate():
     parsers_list = [
@@ -11,6 +11,7 @@ def generate():
         JS_SANITIZE_HTML.SANITIZE_HTML(),
         PYTHON_HTML_SANITIZER.SANITIZE_HTML(),
         GO_bluemonday.SANITIZE_HTML(),
+        JS_JSXSS.SANITIZE_HTML()
     ]
     
     for parser in parsers_list:

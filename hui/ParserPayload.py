@@ -1,3 +1,5 @@
+from string import Template
+
 class ParserPayload:
     """
     Represents a payload for parsing with additional metadata and methods for validation.
@@ -23,7 +25,7 @@ class ParserPayload:
         self.parametrs = parametrs
         self.tags = tags
 
-    def check(self, output):
+    def check(self, output, TEMPLATE_VARS):
         """
         Checks if the output matches the expected output, considering whitespace.
 
@@ -33,9 +35,11 @@ class ParserPayload:
         Returns:
             bool: True if the output matches the expected output, False otherwise.
         """
-        if output in self.expected_output:
+        output = Template(output).safe_substitute(TEMPLATE_VARS)
+        expected_output_template = Template(self.expected_output).safe_substitute(TEMPLATE_VARS)
+        if output in expected_output_template:
             return True
-        if self.remove_whitespace(output) in self.remove_whitespace(self.expected_output):
+        if self.remove_whitespace(output) in self.remove_whitespace(expected_output_template):
             return True
         return False
 

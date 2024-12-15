@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: hui
-Version: 0.2.1
+Version: 0.2.2
 Home-page: https://github.com/slonser/hui
 Download-URL: https://github.com/Slonser/hui/archive/v_01.tar.gz
 Author: Slonser
 Author-email: slonser@slonser.info
 License: MIT
-Keywords: HTML,hui,HTML GUESSER,HTML identifier
+Keywords: HTML,hui,HTML GUESSER,HTML identifier,XSS,bugbounty
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
 Classifier: Topic :: Software Development :: Build Tools
@@ -57,6 +57,9 @@ def handler(payload):
 a = Identifier(handler=handler, buffer_enabled=False, buffer_limit=64, debug_mode=False)
 print(a.identify())
 # run all
+# Example output 
+# [[1.0, 27, 'JS_SANITIZE_HTML'], [0.8148148148148148, 22, 'PYTHON_HTML_SANITIZE'], ...
+
 print(a.check_attr_allowed("href",tag="a"))
 # True or False
 print(a.INCORRECT_PARSED)
@@ -87,6 +90,7 @@ The following parsers are currently supported in the project:
 - **JSDOM (JS)**
 - **sanitize_html (JS)**
 - **htmlparser2 (JS)**
+- **JSXSS (JS)**
 - **html (python)**
 - **lxml (python)**
 - **html_sanitizer (python)**
